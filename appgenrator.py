@@ -1,8 +1,6 @@
-from flask import Flask, render_template, request, send_file, redirect
+from flask import Flask, request, render_template, send_file
 import os
 import tempfile
-import shutil
-import zipfile
 from zipfile import ZipFile
 
 app = Flask(__name__)
@@ -26,10 +24,10 @@ def home():
 
             # Define the new project's directory
 
-            # temp_dir = tempfile.gettempdir()
+            temp_dir = tempfile.gettempdir()
 
             # project_directory = os.path.join(app.root_path, title)
-            project_directory = os.path.join(os.getcwd(), title)
+            project_directory = os.path.join(temp_dir, title)
 
             # Create the new project directory and a 'templates' directory within it
             os.makedirs(os.path.join(project_directory,
@@ -152,15 +150,10 @@ if __name__ == '__main__':
                 print("Yes the project folder exists !!!!")
                 project_folder_name = title
 
-                # download_folder(project_directory,
-                #                 project_folder_name)
-                zip_path = os.path.join(project_directory, f'{title}.zip')
-                zip_folder(project_directory, zip_path)
+                download_response = download_folder(
+                    project_directory, temp_dir, project_folder_name)
 
-                # shutil.rmtree(project_directory)
-                return send_file(f'{zip_path}', as_attachment=True, download_name=f'{title}.zip')
-
-                return f"Project {project_folder_name} created successfully!"
+                return download_response
 
         except Exception as e:
             print("An error occurred while generating the project:", e)
@@ -168,36 +161,13 @@ if __name__ == '__main__':
     return render_template('index.html')
 
 
-def zipdir(path, ziph):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(os.path.join(root, file))
+def download_folder(project_directory, temp_dir, project_folder_name):
 
-
-def download_folder(project_directory, folder_name):
-
-    # Create a temporary ZIP file to store the folder contents
-    zip_path = f'{os.getcwd()}/{folder_name}.zip'
-    # zip_path = f'{get_downloads_folder_path()}/{folder_name}.zip'
-
+    zip_path = os.path.join(temp_dir, f'{project_folder_name}.zip')
     zip_folder(project_directory, zip_path)
 
-    # # Send the ZIP file as a downloadable response
-    return send_file(f'{zip_path}', as_attachment=True, download_name=f'{folder_name}.zip')
-
-
-def get_downloads_folder_path():
-    # Retrieve the user's home directory
-    home_dir = os.path.expanduser("~")
-
-    # Determine the downloads folder path based on the operating system
-    if os.name == 'posix':  # macOS or Linux
-        return os.path.join(home_dir, 'Downloads')
-    elif os.name == 'nt':  # Windows
-        return os.path.join(home_dir, 'Downloads')
-    else:
-        raise NotImplementedError("Unsupported operating system")
+    return send_file(f'{zip_path}', as_attachment=True,
+                     download_name=f'{project_folder_name}.zip')
 
 
 def zip_folder(folder_path, zip_path):
