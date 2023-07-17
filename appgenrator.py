@@ -152,10 +152,13 @@ if __name__ == '__main__':
                 print("Yes the project folder exists !!!!")
                 project_folder_name = title
 
-                download_folder(project_directory,
-                                project_folder_name)
+                # download_folder(project_directory,
+                #                 project_folder_name)
+                zip_path = os.path.join(project_directory, f'{title}.zip')
+                zip_folder(project_directory, zip_path)
 
-                shutil.rmtree(project_directory)
+                # shutil.rmtree(project_directory)
+                return send_file(f'{zip_path}', as_attachment=True, download_name=f'{title}.zip')
 
                 return f"Project {project_folder_name} created successfully!"
 
