@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Input Form</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+        
+        h1, form {
+            text-align: center;
+        }
+    
+        .hidden {
+            display: none;
+        }
+    
+    </style>
+</head>
+
+<body>
+    <h1>App Generator</h1>
+    <form method="POST" action="/">
+        <label for="title">App Name:</label>
+        <input type="text" id="title" name="title" required><br><br>
+        
+        <label for="variable_input_2">No. of Variables required:</label>
+        <select id="variable_input_2" name="variable_input_2" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select><br><br>
+        
+        <!-- Hidden input field to store the value of 'n' -->
+        <input type="hidden" id="n" name="n">
+        
+        <!-- Accept 'n' inputs from the user -->
+        <div id="input_fields" class="hidden"></div>
+          
+	<label for="open_id">Open ID:</label>
+        <input type="text" id="open_id" name="open_id" required><br><br>
+        
+        <label for="prompt">Prompt:</label>
+	<p>Enter prompt with variable name n_values1 in curly brakets like {n_values1[I]}} e.g Generate essay on {n_values1[o]}+{n_values1[1]}. Input 1 is n_values1[o] and so on</p>
+        <input type="text" id="prompt" name="prompt" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+   
+    <script>
+        // Add your additional JavaScript code here
+        document.getElementById('variable_input_2').addEventListener('input', function(event) {
+            // Convert the value of 'variable_input_2' to an integer
+            var n = parseInt(document.getElementById('variable_input_2').value);
+            
+            // Limit 'n' to a maximum of 10
+            if (n > 10) {
+                n = 10;
+                document.getElementById('variable_input_2').value = n;
+            }
+            
+            // Set the value of 'n' in the hidden input field
+            document.getElementById('n').value = n;
+            
+            // Show the input fields container
+            document.getElementById('input_fields').classList.remove('hidden');
+
+            // Generate input fields based on 'n'
+            var inputFields = '';            
+	    if (n === 1) {
+                inputFields += '<label for="input_1">Input 1</label><br>';
+                inputFields += '<input type="text" id="input_1" name="input_1"><br><br>';
+            } else {
+                for (var i = 1; i <= n; i++) {
+                    inputFields += '<label for="input_' + String(i) + '">Input ' + String(i) + '</label><br>';
+                    inputFields += '<input type="text" id="input_' + String(i) + '" name="input_' + String(i) + '"><br><br>';
+                }
+            }
+            
+            document.getElementById('input_fields').innerHTML = inputFields;
+        });
+
+        // Trigger the 'input' event to generate input fields initially
+        document.getElementById('variable_input_2').dispatchEvent(new Event('input'));
+    </script>
+</body>
+</html>

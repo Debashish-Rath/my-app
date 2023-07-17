@@ -1,0 +1,13 @@
+{
+  "builds": [
+    {
+      "src": "wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [{ "src": "/(.*)", "dest": "/wsgi.py" }],
+  "env": {
+    "PYTHONUSERBASE": "./.python_packages"
+  },
+  "buildCommand": "python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt"
+}
