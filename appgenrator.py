@@ -26,10 +26,10 @@ def home():
 
             # Define the new project's directory
 
-            temp_dir = tempfile.gettempdir()
+            # temp_dir = tempfile.gettempdir()
 
             # project_directory = os.path.join(app.root_path, title)
-            project_directory = os.path.join(temp_dir, title)
+            project_directory = os.path.join(os.getcwd(), title)
 
             # Create the new project directory and a 'templates' directory within it
             os.makedirs(os.path.join(project_directory,
@@ -175,7 +175,8 @@ def zipdir(path, ziph):
 def download_folder(project_directory, folder_name):
 
     # Create a temporary ZIP file to store the folder contents
-    zip_path = f'{get_downloads_folder_path()}/{folder_name}.zip'
+    zip_path = f'{os.getcwd()}/{folder_name}.zip'
+    # zip_path = f'{get_downloads_folder_path()}/{folder_name}.zip'
 
     zip_folder(project_directory, zip_path)
 
